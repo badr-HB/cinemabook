@@ -88,6 +88,7 @@ elements.forEach((element) => {
     element.addEventListener('click', (e) => {
         const target = e.currentTarget;
         const id = Number(target.dataset.value);
+        const parent = element.parentElement.closest('article');
 
         const search = selected_movies.find((e) => e == id)
         if (!search) {
@@ -97,6 +98,9 @@ elements.forEach((element) => {
             target.classList.remove('text-slate-700');
             target.classList.remove('border');
             target.innerHTML = "Sélectionné";
+            parent.classList.add('ring-2');
+            parent.classList.add('ring-red-100');
+            parent.classList.add('border-red-400');
         }
         else {
             const foundindex = selected_movies.indexOf(search)
@@ -106,6 +110,9 @@ elements.forEach((element) => {
             target.classList.add('border');
             selected_movies.splice(foundindex, 1);
             target.innerHTML = "Choisir ce film";
+            parent.classList.remove('ring-2');
+            parent.classList.remove('ring-red-100');
+            parent.classList.remove('border-red-400');
         }
 
     })
