@@ -68,6 +68,7 @@ for (let i = 0; i < films.length; i++) {
     CreateCard(i, hours, minutes);
 }
 
+
 // ==================================================
 // US02 - SÉLECTIONNER UN FILM
 // ==================================================
@@ -81,6 +82,8 @@ for (let i = 0; i < films.length; i++) {
 // ÉCRIVEZ VOTRE CODE ICI :
 const elements = document.querySelectorAll('#selection_button');
 const parent = document.querySelectorAll('#btn-select-parent');
+const parent_div = document.querySelectorAll('#film-details-parent');
+const child_div = document.querySelectorAll('#film-details');
 
 let selected_movies = [];
 
@@ -89,8 +92,8 @@ elements.forEach((element) => {
         const target = e.currentTarget;
         const id = Number(target.dataset.value);
         const parent = element.parentElement.closest('article');
+        const search = selected_movies.find((e) => e == id);
 
-        const search = selected_movies.find((e) => e == id)
         if (!search) {
             selected_movies.push(id)
             target.classList.add('bg-cine-red');
@@ -101,6 +104,7 @@ elements.forEach((element) => {
             parent.classList.add('ring-2');
             parent.classList.add('ring-red-100');
             parent.classList.add('border-red-400');
+            affichage(id)
         }
         else {
             const foundindex = selected_movies.indexOf(search)
@@ -113,14 +117,63 @@ elements.forEach((element) => {
             parent.classList.remove('ring-2');
             parent.classList.remove('ring-red-100');
             parent.classList.remove('border-red-400');
+            remove();
         }
+
 
     })
 })
 
+//affichage des films
+function affichage(id) {
+    let hours = 0;
+    let minutes = 0;
+    hours = films[id - 1].duree;
+    hours = Math.trunc(hours / 60);
+    minutes = hours * 60;
+    minutes = films[id - 1].duree - minutes;
+
+    parent_div.forEach((e) => {
+        e.innerHTML += `
+        <div id="film-details" class="mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr] data-value="${id}">
+                <img src="${films[id - 1].affiche}" alt="${films[id - 1].titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
+              <div>
+              <div class="flex flex-wrap items-center gap-2">
+                 <h3 class="text-xl font-black">
+                    ${films[id - 1].titre}
+                 </h3>
+                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                ${films[id - 1].prix}
+              </span>
+              </div>
+              <p class="mt-2 text-sm font-semibold text-slate-500">${films[id - 1].genre} · ${hours} h ${minutes} min</p>
+              <p class="mt-3 leading-7 text-slate-600">${films[id - 1].description}</p>
+              </div>
+            </div>`})
+}
+function remove(){
+    child_div.forEach((e) => {
+        console.log(e);
+    })
+    
+}
 
 
-0
+/* <div id="film-details" class="mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr]">
+                <img src="assets/images/mission-galaxie.png" alt="Mission Galaxie" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
+              <div>
+              <div class="flex flex-wrap items-center gap-2">
+                 <h3 class="text-xl font-black">
+                    Mission Galaxie</h3>
+                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+
+              </span>
+              </div>
+              <p class="mt-2 text-sm font-semibold text-slate-500">Science-fiction · 2 h 04 min</p>
+              <p class="mt-3 leading-7 text-slate-600">Une exploratrice suit un signal inconnu jusqu’aux confins d’une galaxie oubliée.</p>
+              </div>
+            </div>` */
+
 // ==================================================
 // US03 - AFFICHER LES SÉANCES
 // ==================================================
