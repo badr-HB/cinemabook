@@ -45,14 +45,14 @@ const film_box = document.querySelector('#films-container');
 
 function CreateCard(i, h, m) {
     film_box.innerHTML +=
-        `<article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg" id="btn-select-parent">
+        `<article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg btn-select-parent">
             <div class="relative"><img src="${films[i].affiche}" alt="${films[i].titre}" class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix || 0} DH</span></div>
             <div class="p-4">
                     <p class="text-xs font-bold uppercase tracking-wider text-cine-red">${films[i].genre}</p>
                     <h3 class="mt-1 text-lg font-black">${films[i].titre}</h3>
                     <p class="mt-2 text-sm text-slate-500">${h} h ${m} min</p>
                 <div id="selection_box">
-                    <button type="button" id="selection_button" data-value="${films[i].id}" class="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3 font-extrabold text-slate-700">
+                    <button type="button" data-value="${films[i].id}" class="selection_button mt-4 w-full rounded-xl border border-slate-300 px-4 py-3 font-extrabold text-slate-700">
                     Choisir ce film
                     </button>
                 </div>
@@ -80,10 +80,10 @@ for (let i = 0; i < films.length; i++) {
 // PISTE : un changement de film doit aussi réinitialiser séance et sièges.
 // MODÈLE : #film-details contient déjà un exemple de détail à reproduire.
 // ÉCRIVEZ VOTRE CODE ICI :
-const elements = document.querySelectorAll('#selection_button');
-const parent = document.querySelectorAll('#btn-select-parent');
-const parent_div = document.querySelectorAll('#film-details-parent');
-const child_div = document.querySelectorAll('#film-details');
+const elements = document.querySelectorAll('.selection_button');
+const parent = document.querySelectorAll('.btn-select-parent');
+const parent_div = document.querySelector('#film-details-parent');
+const child_div = document.querySelectorAll('.film-details');
 
 let selected_movies = [];
 
@@ -93,6 +93,7 @@ elements.forEach((element) => {
         const id = Number(target.dataset.value);
         const parent = element.parentElement.closest('article');
         const search = selected_movies.find((e) => e == id);
+        
 
         if (!search) {
             selected_movies.push(id)
@@ -117,12 +118,14 @@ elements.forEach((element) => {
             parent.classList.remove('ring-2');
             parent.classList.remove('ring-red-100');
             parent.classList.remove('border-red-400');
-            remove();
+            remove(id);
+            
         }
 
 
     })
 })
+let array = [];
 
 //affichage des films
 function affichage(id) {
@@ -133,46 +136,42 @@ function affichage(id) {
     minutes = hours * 60;
     minutes = films[id - 1].duree - minutes;
 
-    parent_div.forEach((e) => {
-        e.innerHTML += `
-        <div id="film-details" class="mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr] data-value="${id}">
-                <img src="${films[id - 1].affiche}" alt="${films[id - 1].titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
-              <div>
-              <div class="flex flex-wrap items-center gap-2">
-                 <h3 class="text-xl font-black">
-                    ${films[id - 1].titre}
-                 </h3>
-                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
-                ${films[id - 1].prix}
-              </span>
-              </div>
-              <p class="mt-2 text-sm font-semibold text-slate-500">${films[id - 1].genre} · ${hours} h ${minutes} min</p>
-              <p class="mt-3 leading-7 text-slate-600">${films[id - 1].description}</p>
-              </div>
-            </div>`})
-}
-function remove(){
-    child_div.forEach((e) => {
-        console.log(e);
-    })
+    let holder = ` <div class="films-details-parent">
+           <div class="film-details mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr] data-div="${id}">
+                 <img src="${films[id - 1].affiche}" alt="${films[id - 1].titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
+               <div>
+               <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-xl font-black">
+                     ${films[id - 1].titre}
+                  </h3>
+                 <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                 ${films[id - 1].prix}
+               </span>
+               </div>
+               <p class="mt-2 text-sm font-semibold text-slate-500">${films[id - 1].genre} · ${hours} h ${minutes} min</p>
+               <p class="mt-3 leading-7 text-slate-600">${films[id - 1].description}</p>
+               </div>
+             </div>
+         </div>`
+    array.push({id: id,text: holder})
+   
+    
+    parent_div.innerHTML = array.map(t => t.text).join('');
     
 }
 
+function remove(id){
+    
+    const look = array.find((ele) => ele.id == id);
+    const foundindex = array.indexOf(look)
+    const remove = array.splice(foundindex,1)
+    console.log(remove);
 
-/* <div id="film-details" class="mt-6 grid gap-5 rounded-2xl bg-slate-50 p-5 sm:grid-cols-[100px_1fr]">
-                <img src="assets/images/mission-galaxie.png" alt="Mission Galaxie" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
-              <div>
-              <div class="flex flex-wrap items-center gap-2">
-                 <h3 class="text-xl font-black">
-                    Mission Galaxie</h3>
-                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+    parent_div.innerHTML = "";
 
-              </span>
-              </div>
-              <p class="mt-2 text-sm font-semibold text-slate-500">Science-fiction · 2 h 04 min</p>
-              <p class="mt-3 leading-7 text-slate-600">Une exploratrice suit un signal inconnu jusqu’aux confins d’une galaxie oubliée.</p>
-              </div>
-            </div>` */
+    parent_div.innerHTML = array.map(t => t.text).join('');
+}
+
 
 // ==================================================
 // US03 - AFFICHER LES SÉANCES
