@@ -93,7 +93,7 @@ elements.forEach((element) => {
         const id = Number(target.dataset.value);
         const parent = element.parentElement.closest('article');
         const search = selected_movies.find((e) => e == id);
-        
+
 
         if (!search) {
             selected_movies.push(id)
@@ -119,7 +119,7 @@ elements.forEach((element) => {
             parent.classList.remove('ring-red-100');
             parent.classList.remove('border-red-400');
             remove(id);
-            
+
         }
 
 
@@ -153,23 +153,26 @@ function affichage(id) {
                </div>
              </div>
          </div>`
-    array.push({id: id,text: holder})
-   
-    
+    array.push({ id: id, text: holder })
+
+
     parent_div.innerHTML = array.map(t => t.text).join('');
-    
+
+    seance(id)
 }
 
-function remove(id){
-    
+function remove(id) {
+
     const look = array.find((ele) => ele.id == id);
     const foundindex = array.indexOf(look)
-    const remove = array.splice(foundindex,1)
+    const remove = array.splice(foundindex, 1)
     console.log(remove);
 
     parent_div.innerHTML = "";
 
     parent_div.innerHTML = array.map(t => t.text).join('');
+
+    seance(id)
 }
 
 
@@ -182,7 +185,63 @@ function remove(id){
 // TODO : créer un bouton par séance et conserver son id dans data-seance-id.
 // MODÈLE : les trois boutons statiques de #seances-container montrent le HTML attendu.
 // ÉCRIVEZ VOTRE CODE ICI :
+const seances_container = document.querySelector('#seances-container');
+function seance(id) {
+    const find_seance = array.find((t) => t.id == id);
+    const btn_numbers = films[id - 1].seances.length;
 
+    if (find_seance) {
+        seances_container.innerHTML += `<div class="time_selection_parent w-full space-y-4 space-x-4">
+                <h2 class="seances-title text-2xl font-black tracking-tight sm:text-3xl">Choisissez une séance</h2>
+              </div>`
+
+        const parent = document.querySelectorAll('.time_selection_parent')
+
+        for (let i = 0; i < btn_numbers; i++) {
+            const btn = document.createElement('button')
+            btn.textContent = films[id - 1].seances[i].horaire
+            btn.classList.add('border')
+            btn.classList.add('rounded-xl')
+            btn.classList.add('border-slate-300')
+            btn.classList.add('bg-slate-50')
+            btn.classList.add('py-3')
+            btn.classList.add('px-5')
+            btn.classList.add('font-bold')
+            btn.classList.add('text-slate-700')
+            parent.forEach((p) => {
+                p.appendChild(btn);
+            })
+
+        }
+    }
+    // else{
+    //     seances_container.innerHTML = '';
+
+    //     seances_container.innerHTML += `<div class="time_selection_parent w-full space-y-4 space-x-4">
+    //             <h2 class="seances-title text-2xl font-black tracking-tight sm:text-3xl">Choisissez une séance</h2>
+    //           </div>`
+
+    //     const parent = document.querySelectorAll('.time_selection_parent')
+
+    //     for (let i = 0; i < btn_numbers; i++) {
+    //         const btn = document.createElement('button')
+    //         btn.textContent = films[id - 1].seances[i].horaire
+    //         btn.classList.add('border')
+    //         btn.classList.add('rounded-xl')
+    //         btn.classList.add('border-slate-300')
+    //         btn.classList.add('bg-slate-50')
+    //         btn.classList.add('py-3')
+    //         btn.classList.add('px-5')
+    //         btn.classList.add('font-bold')
+    //         btn.classList.add('text-slate-700')
+    //         parent.forEach((p) => {
+    //             p.appendChild(btn);
+    //         })
+
+    //     }
+        
+    // }
+}
 
 // ==================================================
 // US04 - SÉLECTIONNER UNE SÉANCE
